@@ -1,0 +1,255 @@
+Approach:  These tests will input the file lrt.config as the input with the program.
+Example: lrt lrt.config 31708[seed]
+
+Note: Due to its non-deterministic nature, the output of the LRT program can vary even when using the 
+same input file and seed. As a result, when creating test cases, we provide instructions on how to 
+easily trigger each type of case and only specify particular input file just for reference.
+
+---------------------------------------------------------------------------------------------------------
+Case 1, Two students with the same destination board the train at the same stop and time, and 
+later disembark in the order they boarded as in the train output.
+This case will be easily triggered by large student numbers and small stops so that multiple students 
+might probably embark on the same stop.
+
+StopCost				1	# amount to charge per train stop
+NumStudents				2	# number of students to create
+NumStops				2	# number of train stops; minimum of 2
+MaxNumStudents 			        5  	# maximum students each train can carry
+TimerDelay 				5	# length of time between each tick of the timer
+MaxStudentDelay			        10	# maximum random student delay between trips
+MaxStudentTrips 		        2	# maximum number of train trips each student takes
+GroupoffDelay			        10	# length of time between initializing gift cards
+ConductorDelay			        5  	# length of time between checking on passenger POPs
+ParentalDelay			        10	# length of time between cash deposits
+NumCouriers				1	# number of WATCard office couriers in the pool
+---------------------------------------------------------------------------------------------------------
+
+Parent  Gropoff WATOff  Names   Timer   Train0  Train1  Cond0   Cond1   Stop0   Stop1   Stud0   Stud1   WCour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+                                t3              A1,5,0                  A0,5,0  t       E0      E0
+                                                                        A1,5,0
+D0,1                                    E0,1    A1,5,0          c       t
+                                        E1,1                                    t
+D1,1                                    A0,4,1                  c       t       A1,5,0  D1
+                                t4                      c                       A0,4,0
+                                                A1,5,0                  A1,5,0  t
+D0,1                                    A0,4,1  A1,5,0          c       t       D0      F
+                                t5                      c               A0,4,0  A1,5,0
+                                                A1,5,0                  A1,5,0  t
+D1,1                            t6      A0,5,0  A1,5,0  c       c       t       t               D1
+
+Two students get on a train from the same starting point, at the same time, and with the same destination
+(E0,1 and E1,1). When they arrive at their destination, they get off the train in the same order as they got on, 
+which is shown by the train's output. As above example, the student 0 got on the train first, he will also be 
+the first to get off the train when it reaches their destination, followed by the second student(1) who boarded the 
+train after them. This can be seen as a rule that the train follows to ensure that passengers get off the train 
+in an orderly and systematic way.
+
+---------------------------------------------------------------------------------------------------------
+Case 2. A student boards the train without paying but is caught by a conductor, resulting in the student 
+being ejected and their trip being terminated.
+This case will be easily triggered by small stops so that the probability of travelling within one stop is
+high and students might choose to take the free ride.
+
+StopCost				1	# amount to charge per train stop
+NumStudents				2	# number of students to create
+NumStops				2	# number of train stops; minimum of 2
+MaxNumStudents 			5  	# maximum students each train can carry
+TimerDelay 				5	# length of time between each tick of the timer
+MaxStudentDelay			10	# maximum random student delay between trips
+MaxStudentTrips 		30	# maximum number of train trips each student takes
+GroupoffDelay			10	# length of time between initializing gift cards
+ConductorDelay			5  	# length of time between checking on passenger POPs
+ParentalDelay			10	# length of time between cash deposits
+NumCouriers				1	# number of WATCard office couriers in the pool
+---------------------------------------------------------------------------------------------------------
+
+Parent  Gropoff WATOff  Names   Timer   Train0  Train1  Cond0   Cond1   Stop0   Stop1   Stud0   Stud1   WCour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+                        T0,0                                                    t       f
+                                t10             A1,5,0                  A1,5,0  W0,<    W1
+                        T1,1                                                    A0,5,0  E0      T1,0,<
+                        T1,0                                                                    f
+                                t13                                             W1,<            W1
+D0,1                            t14     E0,0    A1,5,0                  A1,5,0  t
+                                        A0,5,0  A1,5,0  e0      c       t       A1,5,0  e
+D1,1                            t15             A1,5,0  c               A0,5,0  t       F
+                                t16                                     A1,5,0
+
+As we can see from the above example, Student 0 attempts to board a train without paying the required fare. However, 
+the conductor 0 checks his ticket and discovers that he has not paid. As a result, the student is requested to 
+leave the train, and their trip is terminated.
+
+---------------------------------------------------------------------------------------------------------
+Case 3. If a student intends to embark on a trip and discovers that the clockwise route on the train is 
+the same as the counterclockwise route, they will select the clockwise route.
+This case will be easily triggered by small stops so that the probability of having same route from clockwise
+and counterclockwise is high.
+
+StopCost				1	# amount to charge per train stop
+NumStudents				2	# number of students to create
+NumStops				2	# number of train stops; minimum of 2
+MaxNumStudents 			5  	# maximum students each train can carry
+TimerDelay 				5	# length of time between each tick of the timer
+MaxStudentDelay			10	# maximum random student delay between trips
+MaxStudentTrips 		30	# maximum number of train trips each student takes
+GroupoffDelay			10	# length of time between initializing gift cards
+ConductorDelay			5  	# length of time between checking on passenger POPs
+ParentalDelay			10	# length of time between cash deposits
+NumCouriers				1	# number of WATCard office couriers in the pool
+---------------------------------------------------------------------------------------------------------
+
+Parent  Gropoff WATOff  Names   Timer   Train0  Train1  Cond0   Cond1   Stop0   Stop1   Stud0   Stud1   WCour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+D0,1            W       L1              A0,5,0  A1,5,0                  A0,5,0          T0,1,<          T0,1
+        D1              T0,0                            c                       A1,5,0                  t1,1
+
+The given example illustrates that a student, referred to as "Student 0," intends to travel from Trainstop 0 to 
+Trainstop 1, with the knowledge that there are only two train stops and that the clockwise train route is identical 
+to the counterclockwise train route. In this scenario, the student decides to choose the '<' symbol, indicating that 
+they will take the clockwise train to reach their destination.
+
+---------------------------------------------------------------------------------------------------------
+Case 4. A WAT card has been lost during the resetPOP process, which occurs when the card loses its proof 
+of purchase.
+
+StopCost				1	# amount to charge per train stop
+NumStudents				10	# number of students to create
+NumStops				2	# number of train stops; minimum of 2
+MaxNumStudents 			        5  	# maximum students each train can carry
+TimerDelay 				5	# length of time between each tick of the timer
+MaxStudentDelay			        10	# maximum random student delay between trips
+MaxStudentTrips 		        30	# maximum number of train trips each student takes
+GroupoffDelay			        10	# length of time between initializing gift cards
+ConductorDelay			        5  	# length of time between checking on passenger POPs
+ParentalDelay			        10	# length of time between cash deposits
+NumCouriers				1	# number of WATCard office couriers in the pool
+---------------------------------------------------------------------------------------------------------
+
+(For the purpose of illustration, we will focus on one student who lost their WATCard, out of the 10 students 
+included in the following example.)
+
+Parent  Gropoff WATOff  Names   Timer   Train0  Train1  Cond0   Cond1   Stop0   Stop1   Stud3   WCour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+D0,1                                    A0,5,0  A1,5,0  c       c       t       t       D1
+                C3,1                                            c               D3      L
+                W                                                                               t3,1
+                                                                        t       A1,5,0          T3,1
+
+As we can see from the above example, student 3 lost their WATCard while disembarking the train, as 
+they reset their POP during that time. As a result, the student promptly requests a new card with the
+maximum trip cost, and the request is processed by the WATCard office, which is indicated by the output 
+"C3,1". Following this, the courier of the WATCard office begins to transfer the funds of the maximum 
+trip cost, as requested by the student, which is indicated by the output "t3,1".
+
+---------------------------------------------------------------------------------------------------------
+Case 5. When a tudent does not have enough funds on their WATCard, they request that the card office transfer money 
+onto their card.
+This case will be easily triggered by large stops and large maxTripNums so that the probability of using
+out of the initial balance of the card is high.
+
+StopCost				1	# amount to charge per train stop
+NumStudents				10	# number of students to create
+NumStops				100	# number of train stops; minimum of 2
+MaxNumStudents 			        5  	# maximum students each train can carry
+TimerDelay 				5	# length of time between each tick of the timer
+MaxStudentDelay			        10	# maximum random student delay between trips
+MaxStudentTrips 		        300	# maximum number of train trips each student takes
+GroupoffDelay			        10	# length of time between initializing gift cards
+ConductorDelay			        5  	# length of time between checking on passenger POPs
+ParentalDelay			        10	# length of time between cash deposits
+NumCouriers				1	# number of WATCard office couriers in the pool
+---------------------------------------------------------------------------------------------------------
+
+(For the purpose of illustration, we will only include 3 trainstops out of 10 in the following example.)
+
+Parent  Gropoff WATOff  Names   Timer   Train0  Train1  Cond0   Cond1   Stop0   Stop1   Stop2   Stud0   Stud1   WCour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+                        T0,3                            c                                       T3,5,<
+                        T0,5                                                                    B8,4
+                                                                                                W3
+D0,1                                            A1,4,1                  t       t       t       
+                                        A0,5,0                  c               A1,4,0        
+                                        A0,5,0          c                                       
+                                        A0,5,0                                                
+                                        A0,5,0          c                                       
+                                        A0,5,0                                                  
+                                        A0,5,0          c                t       A0,5,0
+                                        A0,5,0  A1,4,1  c       c       A1,4,0  t       t       
+D1,20                                           A1,4,1  c               t       t       A0,5,0
+                                        A0,5,0          c       c                       t       E0
+                                        E0,5                                                  
+                                        A0,4,1  A1,4,1  c               t                       
+                                        A0,5,0          c       c               t       t       D5
+                        T0,5                                                                    T5,3,>
+                T0,24   T0,3                                                                    
+                W                                                                                               t0,24
+                                                                                                B8,20           T0,24
+
+The given example demonstrates that Student 0 completes their journey from Trainstop 3 to Trainstop 5, with a 
+remaining balance of 4 dollars on their WATCard, as indicated by "B8,4". However, when the student expresses 
+their intention to travel from Trainstop 5 to Trainstop 3, they realize that the cost of the trip would be 8 
+dollars, which exceeds the remaining balance on their card. 
+
+In response, the student requests that the courier transfer the missing funds of 4 dollars, as well as the maximum 
+trip cost of 20 dollars, totaling 24 dollars, onto their card. This transaction is indicated by the output "t0,24".
+
+---------------------------------------------------------------------------------------------------------
+Case 6. Set ParentDelay=0
+---------------------------------------------------------------------------------------------------------
+
+Parent  Gropoff WATOff  Names   Timer   Train0  Train1  Cond0   Cond1   Stop0   Stop1   Stop2   Stud0   Stud1   WCour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+...
+D0,2
+D1,1
+D1,1
+D0,1
+D0,1
+D0,1
+D0,1
+D0,1
+F
+***********************
+If the parentDelay is set to zero and all other tasks, except for the parent, are deleted, there will be a series of "D,x,x"
+outputs followed by a final "F" output. This is because the parent task is continuously checking the _Else clause, resulting 
+in multiple "D,x,x" outputs until the destructor of the parent task is called.
+
+---------------------------------------------------------------------------------------------------------
+Case 7. WAT Card is lost before embarking.
+This case will be easily triggered by large stops and large maxTripNums so that the probability of using
+out of the initial balance of the card is high. Therefore, there is high possibility of transferring money
+and courier might lose the cards.
+
+lrt.config:
+StopCost				2	# amount to charge per train stop
+NumStudents				5	# number of students to create
+NumStops				5	# number of train stops; minimum of 2
+MaxNumStudents 			        3  	# maximum students each train can carry
+TimerDelay 				100	# length of time between each tick of the timer
+MaxStudentDelay			        10	# maximum random student delay between trips
+MaxStudentTrips 		        2	# maximum number of train trips each student takes
+GroupoffDelay			        10	# length of time between initializing gift cards
+ConductorDelay			        5  	# length of time between checking on passenger POPs
+ParentalDelay			        100	# length of time between cash deposits
+NumCouriers				1	# number of WATCard office couriers in the pool
+---------------------------------------------------------------------------------------------------------
+
+Parent	Gropoff	WATOff	Names	Timer	Train0	Train1	Cond0	Cond1	Stop0	Stop1	Stud0	Stud1	Stud4	WCour0
+*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+		C1,4										L		L1
+		W											        t2,4
+D4,1				t13			c	c	A1,3,0	                                                
+					A0,3,0	A1,3,0			t	t
+										A1,3,0
+D0,4				t14			c	c	t	A0,3,0
+D3,1				t15	A0,3,0	A1,3,0	c	c	A0,3,0	t			E0
+					E4,2	A1,3,0	e4		t	t
+					A0,2,1								e
+D1,4		W					c	c				W0	F	T1,4
+				t16					W1,<					t2,4
+
+Before invoking the wait() and embark() methods, student 0 must have already received the WATCard or gift card, meaning that 
+they possess a card that has actual funds loaded onto it, as opposed to a future. Even if the card is misplaced, they cannot 
+call embark() until they have a valid card, which may take multiple attempts as it is feasible (though not probable) for 
+several cards to be lost in a row.
